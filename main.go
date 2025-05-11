@@ -2,31 +2,37 @@ package main
 
 import "fmt"
 
-type Node struct {
-	data int
-	next *Node
+type Monster struct {
+	Name string
+	Type MonsterType
+	next *Monster
 }
 
-type LinkedList struct {
-	head *Node
+type MonsterType string
+
+const (
+	Fire MonsterType = "Fogo"
+)
+
+type MonsterList struct {
+	Head *Monster
+	Tail *Monster
 }
 
-func (list *LinkedList) Insert(data int) {
-	newNode := &Node{data: data}
+func (list *MonsterList) Insert(Name string) {
+	newNode := &Monster{Name: Name}
 
-	if list.head == nil {
-		list.head = newNode
+	if list.Head == nil {
+		list.Head = newNode
+		list.Tail = newNode
 	} else {
-		current := list.head
-		for current.next != nil {
-			current = current.next
-		}
-		current.next = newNode
+		list.Tail.next = newNode
+		list.Tail = newNode
 	}
 }
 
-func (list *LinkedList) Display() {
-	current := list.head
+func (list *MonsterList) Display() {
+	current := list.Head
 
 	if current == nil {
 		fmt.Println("Linked list is empty")
@@ -35,19 +41,18 @@ func (list *LinkedList) Display() {
 
 	fmt.Print("Linked list: ")
 	for current != nil {
-		fmt.Printf("%d ", current.data)
+		fmt.Printf("%v ", current.Name)
 		current = current.next
 	}
 	fmt.Println()
 }
 
 func main() {
-	list := LinkedList{}
+	list := MonsterList{}
 
-	list.Insert(10)
-	list.Insert(20)
-	list.Insert(30)
-	list.Insert(40)
+	list.Insert("Globin")
+	list.Insert("Dragão")
+	list.Insert("Golem")
 
 	list.Display()
 }
