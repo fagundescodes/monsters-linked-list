@@ -3,31 +3,55 @@ package main
 import "fmt"
 
 type Monster struct {
-	Name string
-	Type MonsterType
-	next *Monster
+	Name    string
+	Type    MonsterType
+	Level   int
+	HP      int
+	Attack  int
+	Defense int
+	Skills  []string
+	next    *Monster
 }
 
 type MonsterType string
 
+type Skill struct {
+	Name  string
+	Power int
+}
+
 const (
-	Fire MonsterType = "Fogo"
+	Fire  MonsterType = "Fogo"
+	Water MonsterType = "Água"
+	Earth MonsterType = "Terra"
+	Air   MonsterType = "Ar"
 )
 
 type MonsterList struct {
-	Head *Monster
-	Tail *Monster
+	Head  *Monster
+	Tail  *Monster
+	Type  MonsterType
+	Skill Skill
+	Next  *Monster
 }
 
-func (list *MonsterList) Insert(Name string) {
-	newNode := &Monster{Name: Name}
+func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
+	return &Monster{
+		Name:  name,
+		Type:  monsterType,
+		Level: level,
+	}
+}
+
+func (list *MonsterList) Insert(monster *Monster) {
+	// newNode := &Monster{Name: Name}
 
 	if list.Head == nil {
-		list.Head = newNode
-		list.Tail = newNode
+		list.Head = monster
+		list.Tail = monster
 	} else {
-		list.Tail.next = newNode
-		list.Tail = newNode
+		list.Tail.next = monster
+		list.Tail = monster
 	}
 }
 
@@ -50,9 +74,12 @@ func (list *MonsterList) Display() {
 func main() {
 	list := MonsterList{}
 
-	list.Insert("Globin")
-	list.Insert("Dragão")
-	list.Insert("Golem")
+	globin := CreateMonster("Globin", Earth, 2)
+	dragon := CreateMonster("Dragão", Fire, 5)
+
+	list.Insert(globin)
+	list.Insert(dragon)
+	// list.Insert("Golem")
 
 	list.Display()
 }
