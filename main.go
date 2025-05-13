@@ -43,11 +43,12 @@ func NewMonsterList() *MonsterList {
 
 func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
 	return &Monster{
-		Name:   name,
-		Type:   monsterType,
-		Level:  level,
-		HP:     50 + level*10,
-		Attack: 10 + level*2,
+		Name:    name,
+		Type:    monsterType,
+		Level:   level,
+		HP:      50 + level*10,
+		Attack:  10 + level*2,
+		Defense: 3 + level*2,
 	}
 }
 
@@ -93,6 +94,18 @@ func (list *MonsterList) RemoveMonster(name string) bool {
 	return false
 }
 
+func (list *MonsterList) FindMonster(name string) *Monster {
+	current := list.Head
+	for current != nil {
+		if current.Name == name {
+			return current
+		}
+		current = current.Next
+	}
+
+	return nil
+}
+
 func (list *MonsterList) Display() {
 	if list.Head == nil {
 		fmt.Println("Linked list is empty")
@@ -104,8 +117,16 @@ func (list *MonsterList) Display() {
 	index := 1
 
 	for current != nil {
-		fmt.Printf("%d. Nome: %v, Tipo: %s, Nível: %d, HP: %d\n",
-			index, current.Name, current.Type, current.Level, current.HP)
+		fmt.Printf(
+			"%d. Nome: %v, Tipo: %s, Nível: %d, HP: %d, Atk: %d, Def: %d\n",
+			index,
+			current.Name,
+			current.Type,
+			current.Level,
+			current.HP,
+			current.Attack,
+			current.Defense,
+		)
 		current = current.Next
 		index++
 	}
@@ -130,4 +151,9 @@ func main() {
 	fmt.Println()
 
 	list.Display()
+
+	fmt.Println()
+
+	monstroEncontrado := list.FindMonster("Dragão")
+	fmt.Println(monstroEncontrado)
 }
