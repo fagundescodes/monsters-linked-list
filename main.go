@@ -10,7 +10,7 @@ type Monster struct {
 	Attack  int
 	Defense int
 	Skills  []string
-	next    *Monster
+	Next    *Monster
 }
 
 type MonsterType string
@@ -28,47 +28,87 @@ const (
 )
 
 type MonsterList struct {
-	Head  *Monster
-	Tail  *Monster
-	Type  MonsterType
-	Skill Skill
-	Next  *Monster
+	Head   *Monster
+	Tail   *Monster
+	Length int
+}
+
+func NewMonsterList() *MonsterList {
+	return &MonsterList{
+		Head:   nil,
+		Tail:   nil,
+		Length: 0,
+	}
 }
 
 func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
 	return &Monster{
-		Name:  name,
-		Type:  monsterType,
-		Level: level,
+		Name:   name,
+		Type:   monsterType,
+		Level:  level,
+		HP:     50 + level*10,
+		Attack: 10 + level*2,
 	}
 }
 
 func (list *MonsterList) Insert(monster *Monster) {
-	// newNode := &Monster{Name: Name}
-
 	if list.Head == nil {
 		list.Head = monster
 		list.Tail = monster
 	} else {
-		list.Tail.next = monster
+		list.Tail.Next = monster
 		list.Tail = monster
 	}
+	list.Length++
+}
+
+func (list *MonsterList) RemoveMonster(name string) bool {
+	if list.Head == nil {
+		return false
+	}
+
+	if list.Head.Name == name {
+		list.Head = list.Head.Next
+		if list.Head == nil {
+			list.Tail = nil
+		}
+		list.Length--
+		return true
+	}
+
+	current := list.Head
+	for current.Next != nil {
+		if current.Next.Name == name {
+			removedMonster := current.Next
+			current.Next = removedMonster.Next
+
+			if removedMonster == list.Tail {
+				list.Tail = current
+			}
+			list.Length--
+			return true
+		}
+		current = current.Next
+	}
+	return false
 }
 
 func (list *MonsterList) Display() {
-	current := list.Head
-
-	if current == nil {
+	if list.Head == nil {
 		fmt.Println("Linked list is empty")
 		return
 	}
 
-	fmt.Print("Linked list: ")
+	current := list.Head
+
+	index := 1
+
 	for current != nil {
-		fmt.Printf("%v ", current.Name)
-		current = current.next
+		fmt.Printf("%d. Nome: %v, Tipo: %s, Nível: %d, HP: %d\n",
+			index, current.Name, current.Type, current.Level, current.HP)
+		current = current.Next
+		index++
 	}
-	fmt.Println()
 }
 
 func main() {
@@ -76,10 +116,18 @@ func main() {
 
 	globin := CreateMonster("Globin", Earth, 2)
 	dragon := CreateMonster("Dragão", Fire, 5)
+	golem := CreateMonster("Golem", Earth, 3)
+	hydra := CreateMonster("Hydra", Water, 7)
 
 	list.Insert(globin)
 	list.Insert(dragon)
-	// list.Insert("Golem")
+	list.Insert(golem)
+	list.Insert(hydra)
+
+	list.Display()
+
+	list.RemoveMonster("Golem")
+	fmt.Println()
 
 	list.Display()
 }
