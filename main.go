@@ -9,15 +9,26 @@ type Monster struct {
 	HP      int
 	Attack  int
 	Defense int
-	Skills  []string
+	Skills  []Skill
 	Next    *Monster
+}
+
+func (m *Monster) String() string {
+	return fmt.Sprintf("Nome: %s, Tipo: %s, Nível: %d, HP: %d, Atk: %d, Def: %d",
+		m.Name,
+		m.Type,
+		m.Level,
+		m.HP,
+		m.Attack,
+		m.Defense)
 }
 
 type MonsterType string
 
 type Skill struct {
-	Name  string
-	Power int
+	Name        string
+	Power       int
+	Description string
 }
 
 const (
@@ -42,13 +53,39 @@ func NewMonsterList() *MonsterList {
 }
 
 func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
+	baseAtk := 10 + level*2
+	baseHp := 50 + level*10
+	baseDef := 3 + level*2
+
+	skills := []Skill{
+		{Name: "Ataque Básico", Power: baseAtk, Description: "Um ataque básico"},
+	}
+
+	switch monsterType {
+	case Fire:
+		skills = append(
+			skills,
+			Skill{
+				Name: "Bola de fogo",
+			},
+		)
+	case Water:
+		skills = append(skills,
+
+			Skill{
+				Name: "Jato de água",
+			},
+		)
+	}
+
 	return &Monster{
 		Name:    name,
 		Type:    monsterType,
 		Level:   level,
-		HP:      50 + level*10,
-		Attack:  10 + level*2,
-		Defense: 3 + level*2,
+		HP:      baseHp,
+		Attack:  baseAtk,
+		Defense: baseDef,
+		Skills:  skills,
 	}
 }
 
