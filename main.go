@@ -52,31 +52,51 @@ func NewMonsterList() *MonsterList {
 	}
 }
 
-func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
-	baseAtk := 10 + level*2
-	baseHp := 50 + level*10
-	baseDef := 3 + level*2
+func CreateSkill(name string, power int, description string) Skill {
+	return Skill{
+		Name:        name,
+		Power:       power,
+		Description: description,
+	}
+}
 
+func CreateMonsterSkills(monsterType MonsterType, baseAtk int) []Skill {
 	skills := []Skill{
-		{Name: "Ataque Básico", Power: baseAtk, Description: "Um ataque básico"},
+		CreateSkill("Ataque Básico", baseAtk, "Ataque básico"),
 	}
 
 	switch monsterType {
 	case Fire:
 		skills = append(
 			skills,
-			Skill{
-				Name: "Bola de fogo",
-			},
+			CreateSkill("Bola de Fogo", baseAtk*2, "Dispara uma bola de fogo no inimigo"),
 		)
 	case Water:
-		skills = append(skills,
-
-			Skill{
-				Name: "Jato de água",
-			},
+		skills = append(
+			skills,
+			CreateSkill("Jato d'Água", int(float64(baseAtk)*1.5), "Poderoso jato de água"),
+		)
+	case Earth:
+		skills = append(
+			skills,
+			CreateSkill("Terremoto", int(float64(baseAtk)*1.2), "Causa dano em àrea"),
+		)
+	case Air:
+		skills = append(
+			skills,
+			CreateSkill("Tornado", int(float64(baseAtk)*1.7), "Ataque de ventos cortantes"),
 		)
 	}
+
+	return skills
+}
+
+func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
+	baseAtk := 10 + level*2
+	baseHp := 50 + level*10
+	baseDef := 3 + level*2
+
+	skills := CreateMonsterSkills(monsterType, baseAtk)
 
 	return &Monster{
 		Name:    name,
@@ -170,17 +190,18 @@ func (list *MonsterList) Display() {
 }
 
 func main() {
-	list := MonsterList{}
+	list := NewMonsterList()
 
-	globin := CreateMonster("Globin", Earth, 2)
-	dragon := CreateMonster("Dragão", Fire, 5)
-	golem := CreateMonster("Golem", Earth, 3)
-	hydra := CreateMonster("Hydra", Water, 7)
+	monsters := []*Monster{
+		CreateMonster("Globin", Earth, 2),
+		CreateMonster("Dragão", Fire, 5),
+		CreateMonster("Golem", Earth, 3),
+		CreateMonster("Hydra", Water, 7),
+	}
 
-	list.Insert(globin)
-	list.Insert(dragon)
-	list.Insert(golem)
-	list.Insert(hydra)
+	for _, monster := range monsters {
+		list.Insert(monster)
+	}
 
 	list.Display()
 
