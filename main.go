@@ -151,6 +151,24 @@ func (list *MonsterList) RemoveMonster(name string) bool {
 	return false
 }
 
+func (list *MonsterList) InsertAfter(target *Monster, newMonster *Monster) bool {
+	if target == nil {
+		return false
+	}
+
+	nextMonster := target.Next
+
+	target.Next = newMonster
+	newMonster.Next = nextMonster
+
+	if target == list.Tail {
+		list.Tail = newMonster
+	}
+
+	list.Length++
+	return true
+}
+
 func (list *MonsterList) FindMonster(name string) *Monster {
 	current := list.Head
 	for current != nil {
@@ -202,6 +220,9 @@ func main() {
 	for _, monster := range monsters {
 		list.Insert(monster)
 	}
+
+	fairy := CreateMonster("Fada", Water, 3)
+	list.InsertAfter(monsters[2], fairy)
 
 	list.Display()
 
