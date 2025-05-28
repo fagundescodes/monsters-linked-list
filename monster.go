@@ -12,23 +12,24 @@ const (
 )
 
 type Monster struct {
-	Name    string
-	Type    MonsterType
-	Level   int
-	HP      int
-	Attack  int
-	Defense int
-	Speed   int
-	Skills  []Skill
-	Next    *Monster
+	Name      string
+	Type      MonsterType
+	Level     int
+	CurrentHP int
+	MaxHP     int
+	Attack    int
+	Defense   int
+	Speed     int
+	Skills    []Skill
+	Next      *Monster
 }
 
 func (m *Monster) String() string {
-	return fmt.Sprintf("Nome: %s, Tipo: %s, Nível: %d, HP: %d, Atk: %d, Def: %d, Speed: %d",
+	return fmt.Sprintf("Nome: %s, Tipo: %s, Nível: %d, HP: %d, Atk: %d, Def: %d, Speed: %v",
 		m.Name,
 		m.Type,
 		m.Level,
-		m.HP,
+		m.CurrentHP,
 		m.Attack,
 		m.Defense,
 		m.Speed,
@@ -44,13 +45,34 @@ func CreateMonster(name string, monsterType MonsterType, level int) *Monster {
 	skills := CreateMonsterSkills(monsterType, baseAtk)
 
 	return &Monster{
-		Name:    name,
-		Type:    monsterType,
-		Level:   level,
-		HP:      baseHp,
-		Attack:  baseAtk,
-		Defense: baseDef,
-		Speed:   baseSpd,
-		Skills:  skills,
+		Name:      name,
+		Type:      monsterType,
+		Level:     level,
+		CurrentHP: baseHp,
+		MaxHP:     baseHp,
+		Attack:    baseAtk,
+		Defense:   baseDef,
+		Speed:     baseSpd,
+		Skills:    skills,
 	}
+}
+
+func (m *Monster) Alive() bool {
+	return m.CurrentHP > 0
+}
+
+func (m *Monster) TakeDamage(damage int) bool {
+	m.CurrentHP -= damage
+	if m.CurrentHP < 0 {
+		m.CurrentHP = 0
+	}
+	return !m.Alive()
+}
+
+func (m *Monster) HPercentage() float64 {
+	if m.MaxHP == 0 {
+		return 0
+	}
+
+	return float64(m.CurrentHP) / float64(m.MaxHP) * 100
 }
