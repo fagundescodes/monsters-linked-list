@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type MonsterList struct {
 	Head   *Monster
@@ -90,7 +93,7 @@ func (list *MonsterList) FindMonster(name string) *Monster {
 
 func (list *MonsterList) Display() {
 	if list.Head == nil {
-		fmt.Println("Linked list is empty")
+		fmt.Println("A lista está vazia")
 		return
 	}
 
@@ -99,19 +102,40 @@ func (list *MonsterList) Display() {
 	index := 1
 
 	for current != nil {
-		fmt.Printf(
-			"%d. Nome: %v, Tipo: %s, Nível: %d, HP: %d, Atk: %d, Def: %d, Spd: %d\n",
-			index,
-			current.Name,
-			current.Type,
-			current.Level,
-			current.MaxHP,
-			current.CurrentHP,
-			current.Attack,
-			current.Defense,
-			current.Speed,
-		)
+		status := "Vivo"
+		if !current.Alive() {
+			status = "Morto"
+		}
+
+		createHp := HPBar(current.CurrentHP, current.MaxHP, 10)
+
+		fmt.Printf("%d. [%s] %s (%s)\n", index, status, current.Name, current.Type)
+		fmt.Printf("   HP: %s %d/%d (%.1f%%)\n",
+			createHp, current.CurrentHP, current.MaxHP, current.HPercentage())
+		fmt.Printf("   Atk: %d | Def: %d | Spd: %d | Lvl: %d\n",
+			current.Attack, current.Defense, current.Speed, current.Level)
+		fmt.Println("   " + strings.Repeat("-", 50))
+
 		current = current.Next
 		index++
 	}
+}
+
+func HPBar(curent, max, barLength int) string {
+	if max == 0 {
+		return strings.Repeat(" ", barLength)
+	}
+
+	filledUP := int(float64(curent) / float64(max) * float64(barLength))
+	if filledUP < 0 {
+		filledUP = 0
+	}
+	if filledUP > barLength {
+		filledUP = barLength
+	}
+
+	bar := strings.Repeat("█", filledUP)
+	bar += strings.Repeat("░", barLength-filledUP)
+
+	return bar
 }

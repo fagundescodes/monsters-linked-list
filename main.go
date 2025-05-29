@@ -19,30 +19,23 @@ func main() {
 		list.Insert(monster)
 	}
 
+	fada := CreateMonster("Fada", Fire, 3)
+	list.Insert(fada)
+
 	dragao := list.FindMonster("Dragão")
-	// hydra := list.FindMonster("Hydra")
-	// globin := list.FindMonster("Globin")
-	// fada := list.FindMonster("Fada")
+	hydra := list.FindMonster("Hydra")
+	globin := list.FindMonster("Globin")
+
+	list.Display()
+	fmt.Println()
+
+	dragao.TakeDamage(30)
+	hydra.TakeDamage(100)
+	globin.TakeDamage(47)
 	orc := list.FindMonster("Orc")
+	orc.TakeDamage(100)
 
-	monstroEncontrado := list.FindMonster("Dragão")
-	fmt.Println(monstroEncontrado)
+	fmt.Println()
 
-	morreu := dragao.TakeDamage(30)
-	fmt.Printf("Dragão após dano: %s\n", dragao)
-	fmt.Printf("HP do Dragão depois de sofrer dano: %.1f%%\n", dragao.HPercentage())
-	fmt.Printf("Morto? %t\n", morreu)
-
-	dano := CalculateDamage(orc, dragao, orc.Skills[0])
-	dragao.TakeDamage(dano)
-	fmt.Printf("%s usou %s em %s e causou %v de dano!\n",
-		orc.Name, orc.Skills[1].Name, dragao.Name, dano)
-	fmt.Printf("Dragão após dano: %s\n", dragao)
-	fmt.Printf("HP do Dragão depois de sofrer dano: %.1f%%\n", dragao.HPercentage())
-	fmt.Printf("Morto? %t\n", morreu)
-
-	dano2 := dragao.TakeDamage(70)
-	fmt.Printf("Dragão após dano: %s\n", dragao)
-	fmt.Printf("HP do Dragão depois de sofrer dano: %.1f%%\n", dragao.HPercentage())
-	fmt.Printf("Morto? %t\n", dano2)
+	list.Display()
 }
