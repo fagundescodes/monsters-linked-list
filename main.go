@@ -16,24 +16,14 @@ func main() {
 	}
 
 	for _, monster := range monsters {
-		list.Insert(monster)
+		fmt.Printf("%s speed: %d\n", monster.Name, monster.Speed)
+		list.InsertBySpeed(monster)
 	}
 
-	fada := CreateMonster("Fada", Fire, 3)
-	list.Insert(fada)
-
-	dragao := list.FindMonster("Dragão")
-	hydra := list.FindMonster("Hydra")
-	globin := list.FindMonster("Globin")
-
-	list.Display()
 	fmt.Println()
 
-	dragao.TakeDamage(30)
-	hydra.TakeDamage(100)
-	globin.TakeDamage(47)
-	orc := list.FindMonster("Orc")
-	orc.TakeDamage(100)
+	list.Display()
+	monsters[0].TakeDamage(130)
 
 	fmt.Println()
 

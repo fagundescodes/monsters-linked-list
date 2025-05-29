@@ -19,6 +19,27 @@ func NewMonsterList() *MonsterList {
 	}
 }
 
+func (list *MonsterList) InsertBySpeed(monster *Monster) {
+	if list.Head == nil {
+		list.Head = monster
+		list.Tail = monster
+		monster.Next = nil
+	} else if monster.Speed > list.Head.Speed {
+		monster.Next = list.Head
+		list.Head = monster
+	} else {
+		current := list.Head
+		for current.Next != nil && current.Next.Speed > monster.Speed {
+			current = current.Next
+		}
+
+		monster.Next = current.Next
+		current.Next = monster
+	}
+
+	list.Length++
+}
+
 func (list *MonsterList) Insert(monster *Monster) {
 	if list.Head == nil {
 		list.Head = monster
@@ -138,4 +159,16 @@ func HPBar(curent, max, barLength int) string {
 	bar += strings.Repeat("░", barLength-filledUP)
 
 	return bar
+}
+
+func (list *MonsterList) GetAliveMonster() []*Monster {
+	var alive []*Monster
+	current := list.Head
+	for current != nil {
+		if current.Alive() {
+			alive = append(alive, current)
+		}
+		current = current.Next
+	}
+	return alive
 }
