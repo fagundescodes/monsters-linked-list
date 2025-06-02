@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 var effectiveness = map[MonsterType]map[MonsterType]float64{
 	Fire: {
 		Fire:  1.0,
@@ -27,6 +29,15 @@ var effectiveness = map[MonsterType]map[MonsterType]float64{
 	},
 }
 
+type BattleResult struct {
+	Attacker                *Monster
+	Defender                *Monster
+	Skill                   Skill
+	Damage                  int
+	DiedMonster             bool
+	EffectivenessMultiplier float64
+}
+
 func CalculateDamage(attacker *Monster, defender *Monster, skill Skill) int {
 	baseDamage := attacker.Attack + skill.Power - defender.Defense
 
@@ -37,4 +48,40 @@ func CalculateDamage(attacker *Monster, defender *Monster, skill Skill) int {
 	finalDamage := int(float64(baseDamage) * multiplier)
 
 	return finalDamage
+}
+
+func Attack(attacker *Monster, defender *Monster, skill Skill) BattleResult {
+	damage := CalculateDamage(attacker, defender, skill)
+	died := defender.TakeDamage(damage)
+	multiplier := effectiveness[attacker.Type][defender.Type]
+
+	return BattleResult{
+		Attacker:                attacker,
+		Defender:                defender,
+		Skill:                   skill,
+		Damage:                  damage,
+		DiedMonster:             died,
+		EffectivenessMultiplier: multiplier,
+	}
+}
+
+func (br BattleResult) Display() {
+	effectiveness := ""
+	if br.EffectivenessMultiplier > 1.0 {
+		effectiveness = "efetivo!"
+	} else if br.EffectivenessMultiplier < 1.0 {
+		effectiveness = "não efetivo!"
+	}
+
+	fmt.Printf("%s usou %s em %s\n",
+		br.Attacker.Name, br.Skill.Name, br.Defender.Name)
+
+	fmt.Printf("Dano causado: %d %s\n", br.Damage, effectiveness)
+
+	fmt.Printf("%s: %d/%d HP (%.1f%%)\n",
+		br.Defender.Name, br.Defender.CurrentHP, br.Defender.MaxHP, br.Defender.HPercentage())
+
+	if br.DiedMonster {
+		fmt.Printf("%s foi derrotado\n", br.Defender.Name)
+	}
 }

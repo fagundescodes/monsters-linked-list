@@ -21,11 +21,15 @@ func main() {
 	}
 
 	fmt.Println()
+	dragao := list.FindMonster("Dragão")
+	hydra := list.FindMonster("Hydra")
 
-	list.Display()
-	monsters[0].TakeDamage(130)
+	fmt.Printf("Dragão: %s\n", list.FindMonster("Dragão"))
+	fmt.Printf("Hydra: %s\n", list.FindMonster("Hydra"))
 
-	fmt.Println()
+	result := Attack(dragao, hydra, dragao.Skills[1])
+	result.Display()
 
-	list.Display()
+	result2 := Attack(hydra, dragao, hydra.Skills[1])
+	result2.Display()
 }
