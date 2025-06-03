@@ -51,35 +51,37 @@ func (list *MonsterList) Insert(monster *Monster) {
 	list.Length++
 }
 
-func (list *MonsterList) RemoveMonster(name string) bool {
-	if list.Head == nil {
-		return false
-	}
+func (list *MonsterList) RemoveDeadMonster() int {
+	removed := 0
 
-	if list.Head.Name == name {
+	for list.Head != nil && !list.Head.Alive() {
 		list.Head = list.Head.Next
 		if list.Head == nil {
 			list.Tail = nil
 		}
+
 		list.Length--
-		return true
+		removed++
+	}
+	if list.Head == nil {
+		return removed
 	}
 
 	current := list.Head
 	for current.Next != nil {
-		if current.Next.Name == name {
-			removedMonster := current.Next
-			current.Next = removedMonster.Next
+		if !current.Next.Alive() {
+			deadMonster := current.Next
 
-			if removedMonster == list.Tail {
+			if deadMonster == list.Tail {
 				list.Tail = current
 			}
 			list.Length--
-			return true
+			removed++
+		} else {
+			current = current.Next
 		}
-		current = current.Next
 	}
-	return false
+	return removed
 }
 
 func (list *MonsterList) InsertAfter(target *Monster, newMonster *Monster) bool {

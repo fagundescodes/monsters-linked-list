@@ -68,9 +68,9 @@ func Attack(attacker *Monster, defender *Monster, skill Skill) BattleResult {
 func (br BattleResult) Display() {
 	effectiveness := ""
 	if br.EffectivenessMultiplier > 1.0 {
-		effectiveness = "efetivo!"
+		effectiveness = "Super Efetivo!"
 	} else if br.EffectivenessMultiplier < 1.0 {
-		effectiveness = "não efetivo!"
+		effectiveness = "Não Efetivo!"
 	}
 
 	fmt.Printf("%s usou %s em %s\n",
@@ -84,4 +84,43 @@ func (br BattleResult) Display() {
 	if br.DiedMonster {
 		fmt.Printf("%s foi derrotado\n", br.Defender.Name)
 	}
+}
+
+func BattleByTurn(list *MonsterList, rounds int) {
+	for round := 1; round <= rounds; round++ {
+		aliveMonsters := list.GetAliveMonster()
+		if len(aliveMonsters) < 2 {
+			fmt.Println("Batalha encerrada")
+			break
+		}
+		for _, attacker := range aliveMonsters {
+			if !attacker.Alive() {
+				continue
+			}
+
+			var targets []*Monster
+			for _, monster := range aliveMonsters {
+				if monster != attacker && monster.Alive() {
+					targets = append(targets, monster)
+				}
+			}
+
+			if len(targets) == 0 {
+				continue
+			}
+			target := targets[0]
+			skill := attacker.Skills[0]
+			if len(attacker.Skills) > 1 {
+				skill = attacker.Skills[1]
+			}
+			result := Attack(attacker, target, skill)
+			result.Display()
+		}
+
+		removed := list.RemoveDeadMonster()
+		if removed > 0 {
+			fmt.Printf("%d monstro removido da batalha\n", removed)
+		}
+	}
+	fmt.Println("Fim da Batalha!")
 }
