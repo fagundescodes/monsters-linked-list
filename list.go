@@ -71,6 +71,7 @@ func (list *MonsterList) RemoveDeadMonster() int {
 	for current.Next != nil {
 		if !current.Next.Alive() {
 			deadMonster := current.Next
+			current.Next = deadMonster.Next
 
 			if deadMonster == list.Tail {
 				list.Tail = current
