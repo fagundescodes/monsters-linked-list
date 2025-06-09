@@ -2,7 +2,7 @@
 
 Turn-based toy RPG battle system using linked lists.
 
-## Why this exist?
+## Why this exists?
 Learning data structures with generic examples is so boring. Making monsters fight is not. Same algo, but fun.
 
 ## License
