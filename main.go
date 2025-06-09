@@ -23,7 +23,7 @@ func main() {
 	list.Display()
 
 	fmt.Println("\n--- Iniciando combate automático ---")
-	BattleByTurn(list, 2)
+	BattleByTurn(list, 8)
 
 	fmt.Println("\n--- Estado final ---")
 	list.Display()
